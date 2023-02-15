@@ -9,7 +9,6 @@ import org.springframework.boot.jdbc.DataSourceBuilder;
 import org.springframework.boot.orm.jpa.EntityManagerFactoryBuilder;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.context.annotation.Primary;
 import org.springframework.core.env.Environment;
 import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
 import org.springframework.orm.jpa.JpaTransactionManager;
@@ -22,32 +21,29 @@ import javax.sql.DataSource;
 @Slf4j
 @Configuration
 @EnableTransactionManagement
-@EnableJpaRepositories(entityManagerFactoryRef = "mySQLDBEntityManagerFactory",
-        transactionManagerRef = "mySQLDBTransactionManager",
-        basePackages = {"com.bank.db.bankdbexecuter.repositories.firstdb"})
-public class MySQLDBConfig {
+@EnableJpaRepositories(entityManagerFactoryRef = "postgreSQLDBEntityManagerFactory",
+        transactionManagerRef = "postgreSQLDBTransactionManager",
+        basePackages = {"com.zs.multidatasource.repository.postgres"})
+public class PostgreSQLDBConfig {
 
     @Autowired
     private Environment env;
 
-    @Primary
-    @Bean(name = "mySQLDBDataSource")
+    @Bean(name = "postgreSQLDBDataSource")
     @ConfigurationProperties(prefix = "mysql.datasource")
     public DataSource dataSource() {
         return DataSourceBuilder.create().build();
     }
 
-    @Primary
-    @Bean(name = "mySQLDBEntityManagerFactory")
+    @Bean(name = "postgreSQLDBEntityManagerFactory")
     public LocalContainerEntityManagerFactoryBean entityManagerFactory(EntityManagerFactoryBuilder builder,
-                                                                       @Qualifier("mySQLDBDataSource") DataSource dataSource) {
-        return builder.dataSource(dataSource).packages("com.bank.db.bankdbexecuter.entity.firstdb")
+                                                                       @Qualifier("postgreSQLDBDataSource") DataSource dataSource) {
+        return builder.dataSource(dataSource).packages("com.zs.multidatasource.entity.postgres")
                 .persistenceUnit("db1").build();
     }
 
-    @Primary
-    @Bean(name = "mySQLDBTransactionManager")
-    public PlatformTransactionManager mySQLDBTransactionManager(@Qualifier("mySQLDBEntityManagerFactory") EntityManagerFactory mySQLDBEntityManagerFactory) {
-        return new JpaTransactionManager(mySQLDBEntityManagerFactory);
+    @Bean(name = "postgreSQLDBTransactionManager")
+    public PlatformTransactionManager postgreSQLDBTransactionManager(@Qualifier("postgreSQLDBEntityManagerFactory") EntityManagerFactory postgreSQLDBEntityManagerFactory) {
+        return new JpaTransactionManager(postgreSQLDBEntityManagerFactory);
     }
 }
