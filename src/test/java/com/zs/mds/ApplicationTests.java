@@ -1,4 +1,4 @@
-package com.zs.multidatasource;
+package com.zs.mds;
 
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;
