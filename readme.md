@@ -1,6 +1,6 @@
 **database credentials example**
 
-**csds: Custom Database**
+**csds: Custom Database Name**
 
 **ORACLE**
 
